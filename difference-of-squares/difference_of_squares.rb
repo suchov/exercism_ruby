@@ -4,11 +4,11 @@ class Squares
   end
 
   def square_of_sum
-     @square_of_sum ||= (1..@num).inject(:+)**2
+     @square_of_sum = (1..@num).inject(:+)**2
   end
 
   def sum_of_squares
-     @sum_of_squares ||= (1..@num).inject { |sum, add| sum + add**2 }
+     @sum_of_squares = (1..@num).sum{|x| x*x}
   end
 
   def difference
