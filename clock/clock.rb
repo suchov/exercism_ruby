@@ -1,29 +1,29 @@
 class Clock
-  def initialize(time_hash)
-    @hours = time_hash[:hour] || 0
-    @minutes  = time_hash[:minute] || 0
-    @internal_minutes = @hours * 60 + @minutes
+  HOURS_PER_DAY = 24
+  MINUTES_PER_HOUR = 60
+  MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR
+
+  protected
+  attr_reader :minutes
+
+  public
+  def initialize(hour: 0, minute: 0)
+    @minutes = ((hour * MINUTES_PER_HOUR) + minute) % MINUTES_PER_DAY
+  end
+
+  def +(another_clock)
+    self.class.new(minute: minutes + another_clock.minutes)
+  end
+
+  def -(another_clock)
+    self.class.new(minute: minutes - another_clock.minutes)
+  end
+
+  def ==(another_clock)
+    minutes == another_clock.minutes
   end
 
   def to_s
-    format '%02d:%02d', m_hours, m_minutes
-  end
-
-  def +(minutes)
-    puts minutes
-    puts @minutes
-    puts m_minutes
-    @minutes += minutes
-    self
-  end
-
-  private
-
-  def m_hours
-    @internal_minutes / 60 % 24
-  end
-
-  def m_minutes
-    @internal_minutes % 60
+    "%02i:%02i" % minutes.divmod(MINUTES_PER_HOUR)
   end
 end
