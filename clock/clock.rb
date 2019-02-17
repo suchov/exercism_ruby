@@ -1,29 +1,41 @@
 class Clock
-  HOURS_PER_DAY = 24
-  MINUTES_PER_HOUR = 60
-  MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR
+  include Comparable
 
-  protected
-  attr_reader :minutes
-
-  public
-  def initialize(hour: 0, minute: 0)
-    @minutes = ((hour * MINUTES_PER_HOUR) + minute) % MINUTES_PER_DAY
+  def initialize(parameters)
+    @total_minutes = to_minutes(parameters[:hour] || 0) + (parameters[:minute] || 0)
   end
 
-  def +(another_clock)
-    self.class.new(minute: minutes + another_clock.minutes)
+  def minute
+    @minute ||= @total_minutes % 60
   end
 
-  def -(another_clock)
-    self.class.new(minute: minutes - another_clock.minutes)
-  end
-
-  def ==(another_clock)
-    minutes == another_clock.minutes
+  def hour
+    @hour ||= (@total_minutes / 60) % 24
   end
 
   def to_s
-    "%02i:%02i" % minutes.divmod(MINUTES_PER_HOUR)
+    "#{format hour}:#{format minute}"
+  end
+
+  def +(another_clock)
+    Clock.new(:minute => self.minute + another_clock.minute, :hour => self.hour + another_clock.hour)
+  end
+
+  def -(another_clock)
+    Clock.new(:minute => self.minute - another_clock.minute, :hour => self.hour - another_clock.hour)
+  end
+
+  def <=>(another_clock)
+    (to_minutes self.hour + self.minute) <=> (to_minutes another_clock.hour + another_clock.minute)
+  end
+
+  private 
+
+  def to_minutes(hours)
+    hours * 60
+  end
+
+  def format(number)
+    number.to_s.rjust(2, "0")
   end
 end
