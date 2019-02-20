@@ -15,12 +15,12 @@ class Clock
   def -(another_clock)
     self.class.new(minute: minutes - another_clock.minutes)
   end
-  
-  alias == eql?
 
   def ==(another_clock)
     minutes == another_clock.minutes
   end
+
+  alias eql? == 
   
   def to_s
     "%02i:%02i" % minutes.divmod(MINUTES_PER_HOUR)
