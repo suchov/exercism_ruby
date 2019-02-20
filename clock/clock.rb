@@ -1,8 +1,11 @@
 class Clock
+  HOURS_PER_DAY = 24
+  MINUTES_PER_HOUR = 60
+  MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR
   attr_reader :minutes
 
   def initialize(hour: 0, minute: 0)
-    @minutes = (hour * 60 + minute) % (24 * 60)
+    @minutes = ((hour * MINUTES_PER_HOUR) + minute) % MINUTES_PER_DAY
   end
 
   def +(another_clock)
@@ -13,11 +16,13 @@ class Clock
     self.class.new(minute: minutes - another_clock.minutes)
   end
   
+  alias == eql?
+
   def ==(another_clock)
     minutes == another_clock.minutes
   end
   
   def to_s
-    "%02i:%02i" % minutes.divmod(60)
+    "%02i:%02i" % minutes.divmod(MINUTES_PER_HOUR)
   end
 end
