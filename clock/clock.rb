@@ -1,41 +1,23 @@
 class Clock
-  include Comparable
+  attr_reader :minutes
 
-  def initialize(parameters)
-    @total_minutes = to_minutes(parameters[:hour] || 0) + (parameters[:minute] || 0)
-  end
-
-  def minute
-    @minute ||= @total_minutes % 60
-  end
-
-  def hour
-    @hour ||= (@total_minutes / 60) % 24
-  end
-
-  def to_s
-    "#{format hour}:#{format minute}"
+  def initialize(hour: 0, minute: 0)
+    @minutes = (hour * 60 + minute) % (24 * 60)
   end
 
   def +(another_clock)
-    Clock.new(:minute => self.minute + another_clock.minute, :hour => self.hour + another_clock.hour)
+    self.class.new(minute: minutes + another_clock.minutes)
   end
 
   def -(another_clock)
-    Clock.new(:minute => self.minute - another_clock.minute, :hour => self.hour - another_clock.hour)
+    self.class.new(minute: minutes - another_clock.minutes)
   end
-
-  def <=>(another_clock)
-    (to_minutes self.hour + self.minute) <=> (to_minutes another_clock.hour + another_clock.minute)
+  
+  def ==(another_clock)
+    minutes == another_clock.minutes
   end
-
-  private 
-
-  def to_minutes(hours)
-    hours * 60
-  end
-
-  def format(number)
-    number.to_s.rjust(2, "0")
+  
+  def to_s
+    "%02i:%02i" % minutes.divmod(60)
   end
 end
