@@ -1,4 +1,5 @@
 class Acronym
+
   def self.abbreviate(abbrev)
     result = ""
     abbrev.gsub(/\w+/) do |word|
