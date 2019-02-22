@@ -1,7 +1,7 @@
 class Acronym
 
   def self.abbreviate(abbrev)
-    abbrev.upcase.scan(/\b\w/).join
+    abbrev.scan(/\b\w/).join.upcase
   end
 
 end
