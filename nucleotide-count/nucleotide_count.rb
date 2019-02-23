@@ -1,36 +1,28 @@
+# Given a single stranded DNA string, compute how many times each nucleotide
+# occurs in the string.
 class Nucleotide
-  DNA_NUCLEOTIDES = 'ATCG'.freeze
-  DNA_PATTERN = /\A[ATCG]+\z/
+  attr_reader :dna
 
-  def initialize(dna_string)
-    check_valid_dna! dna_string
-    @dna = dna_string
+  INVALID_DNA = /[^ATCG]/.freeze
+
+  def initialize
+    @dna = { 'A' => 0, 'T' => 0, 'C' => 0, 'G' => 0 }
   end
 
-  def self.from_dna(dna_string)
-    new dna_string
+  def self.from_dna(dna_string = '')
+    dna_string.upcase!
+    raise ArgumentError if dna_string =~ INVALID_DNA
+
+    dna_string
+      .chars
+      .each_with_object(new) { |nuc, new_dna| new_dna.dna[nuc] += 1 }
   end
 
-  def count(nucleotide)
-    @dna.count nucleotide
+  def count(nucleotide = '')
+    dna[nucleotide.upcase]
   end
 
   def histogram
-    count = DNA_NUCLEOTIDES.chars.map { |n| [n, 0] }.to_h # pre 2.6
-    @dna.each_char { |n| count[n] += 1 }
-    count
-  end
-
-  class InvalidNucleotideError < ArgumentError
-    def initialize(msg = 'DNA contains one or more invalid nucleotides!')
-      super msg
-    end
-  end
-
-  private
-
-  def check_valid_dna!(dna)
-    return if dna.empty? # spec allows empty string
-    raise InvalidNucleotideError unless DNA_PATTERN.match dna
+    dna
   end
 end
