@@ -1,15 +1,8 @@
 class PrimeFactors
 
   def self.for(n)
-    divisor = []
-    while n > 1
-      divisor << first_factor(n)
-      n /= divisor.last
-    end
-    divisor
-  end
-
-  def self.first_factor(number)
-    (2..number).find {|x| number % x == 0}
+    return [] if n == 1
+    prime_factor = (2..n).find { |prime| n % prime == 0}
+    [prime_factor] + self.for(n / prime_factor)
   end
 end
