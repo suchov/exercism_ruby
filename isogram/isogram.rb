@@ -1,6 +1,6 @@
 class Isogram
   def self.isogram?(word)
-    gsub_word = word.gsub(/[- ]/, '').downcase.chars
-    gsub_word.uniq == gsub_word
+    letters = word.downcase.scan(/[a-z]/i)
+    letters.uniq == letters
   end
 end
